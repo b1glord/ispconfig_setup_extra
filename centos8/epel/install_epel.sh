@@ -2,7 +2,7 @@
 #---------------------------------------------------------------------
 # install_epel.sh
 #
-# ISPConfig 3 centos7 hhvm facebook installer
+# ISPConfig 3 Centos 8 EPEL repository installer
 #
 # Script: install_epel.sh
 # Version: 1.0.0
