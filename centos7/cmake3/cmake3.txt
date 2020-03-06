@@ -1,0 +1,21 @@
+# Download CMake from: https://cmake.org/download/
+
+wget https://github.com/Kitware/CMake/releases/download/v3.16.2/cmake-3.16.2.tar.gz
+
+# Compile from source and install
+tar zxvf cmake-3.*
+cd cmake-3.*
+./bootstrap --prefix=/usr/local
+make -j$(nproc)
+make install
+Validate installation
+cmake --version
+# cmake3 --version (Optional)
+
+# cmake version *.*.*
+# CMake suite maintained and supported by Kitware (kitware.com/cmake).
+
+
+# For centos, you can create shortcut to /usr/sbin/cmake using this command:
+
+ln -s /folderorfile/link/will/point/to /name/of/the/link

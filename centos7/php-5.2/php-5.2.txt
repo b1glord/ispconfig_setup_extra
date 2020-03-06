@@ -1,0 +1,105 @@
+#https://www.howtoforge.com/how-to-use-multiple-php-versions-php-fpm-and-fastcgi-with-ispconfig-3-centos-6.3
+#http://www.php.net/releases/#5.2.17
+#Temiz kurulumda yuklu degilse gerekli
+yum groupinstall "Development Tools" -y
+yum install -y wget unzip
+
+#Download and extract PHP 5.2.17:
+
+mkdir /opt/php-5.2.17
+mkdir /usr/local/src/php5-build
+cd /usr/local/src/php5-build
+wget http://museum.php.net/php5/php-5.2.17.tar.gz
+tar -xvzf php-5.2.17.tar.gz
+
+#The OpenSSL version in Centos 7 is too new for PHP 5.2.17, 
+#so we'll have to compile an older version in /opt/openssl to use it with PHP 5.6.
+
+mkdir /opt/openssl
+cd /tmp
+wget "https://www.openssl.org/source/old/1.0.1/openssl-1.0.1t.tar.gz"
+tar -xvzf openssl-1.0.1t.tar.gz 
+cd openssl-1.0.1t
+./config shared --prefix=/opt/openssl
+make -j $(nproc) && make install
+ln -s /opt/openssl/lib /opt/openssl/lib/x86_64-linux-gnu
+wget -O /opt/openssl/ssl/cert.pem "https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/php-5.2/cacert.pem"
+
+
+yum install -y libxml2-devel libXpm-devel gmp-devel libicu-devel t1lib-devel aspell-devel openssl-devel bzip2-devel libcurl-devel libjpeg-devel libvpx-devel libpng-devel freetype-devel readline-devel libtidy-devel libxslt-devel libmcrypt-devel pcre-devel curl-devel mysql-devel ncurses-devel gettext-devel net-snmp-devel libevent-devel libtool-ltdl-devel libc-client-devel postgresql-devel
+
+
+cd /usr/local/src/php5-build/php-5.2.17
+
+wget https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/php-5.2/libxml29_compat.patch
+patch -p0 < libxml29_compat.patch 
+
+
+#./buildconf
+
+./configure \
+--prefix=/opt/php-5.2.17 \
+--with-pdo-pgsql \
+--with-zlib-dir \
+--with-freetype-dir \
+--enable-mbstring \
+--with-libxml-dir=/usr \
+--enable-soap \
+--enable-calendar \
+--with-curl \
+--with-mcrypt \
+--with-zlib \
+--with-gd \
+--with-pgsql \
+--disable-rpath \
+--enable-inline-optimization \
+--with-bz2 \
+--with-zlib \
+--enable-sockets \
+--enable-sysvsem \
+--enable-sysvshm \
+--enable-pcntl \
+--enable-mbregex \
+--with-mhash \
+--enable-zip \
+--with-pcre-regex \
+--with-mysql \
+--with-pdo-mysql \
+--with-mysqli \
+--with-jpeg-dir=/usr \
+--with-png-dir=/usr \
+--enable-gd-native-ttf \
+--with-openssl \
+--with-fpm-user=apache \
+--with-fpm-group=apache \
+--with-libdir=lib64 \
+--enable-ftp \
+--with-imap \
+--with-imap-ssl \
+--with-kerberos \
+--with-gettext \
+--enable-fpm
+
+make
+make install
+
+#The last switch (--enable-fpm) makes sure this PHP version will work with PHP-FPM. 
+#If you want to use this PHP-FPM version with Apache, please use --with-fpm-user=apache and --with-fpm-group=apache; 
+#if you want to use this PHP-FPM version with nginx, please use --with-fpm-user=nginx and --with-fpm-group=nginx.
+
+
+
+#Copy php.ini and php-fpm.conf to the correct locations:
+
+
+#cp /usr/local/src/php5-build/php-5.2.17/php.ini-recommended /opt/php-5.2.17/lib/php.ini
+#cp /opt/php-5.2.17/etc/php-fpm.conf.default /opt/php-5.2.17/etc/php-fpm.conf
+mv /etc/php.ini /etc/opt/php52/php.ini
+
+#Open /opt/php-5.2.17/etc/php-fpm.conf and adjust the following settings - in the listen line you must use an unused 
+#port (e.g. 8999; port 9000 might be in use by the default CentOS PHP-FPM already), and you must add the line 
+#include=/opt/php-5.2.17/etc/pool.d/*.conf at the end. If you want to use this PHP-FPM version with Apache, please 
+#use user = apache and group = apache; if you want to use this PHP-FPM version with nginx, please use user = nginx and 
+#group = nginx.
+
+sed -i "s/'cookie'/'http'/" /opt/php-5.2.17/etc/php-fpm.conf

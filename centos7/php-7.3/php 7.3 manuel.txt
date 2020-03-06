@@ -1,0 +1,33 @@
+#https://www.howtoforge.com/how-to-use-multiple-php-versions-php-fpm-and-fastcgi-with-ispconfig-3-centos-6.3
+#http://php.net/downloads.php#v7.3.1
+#https://downloads.php.net/~cmb/
+#Temiz kurulumda yuklu degilse gerekli
+yum groupinstall "Development Tools"
+yum install -y wget unzip
+
+#Download and extract PHP 7.3.1:
+
+mkdir /opt/php-7.3.1
+mkdir /usr/local/src/php7-build
+cd /usr/local/src/php7-build
+wget https://downloads.php.net/~cmb/php-7.3.1RC1.tar.bz2
+tar jxf php-7.3.1RC1.tar.bz2
+
+
+
+
+yum install -y libxml2-devel libXpm-devel gmp-devel libicu-devel t1lib-devel aspell-devel openssl-devel bzip2-devel libcurl-devel libjpeg-devel libvpx-devel libpng-devel freetype-devel readline-devel libtidy-devel libxslt-devel libmcrypt-devel pcre-devel curl-devel mysql-devel ncurses-devel gettext-devel net-snmp-devel libevent-devel libtool-ltdl-devel libc-client-devel postgresql-devel
+
+
+
+#./buildconf
+
+./configure --with-pdo-pgsql --with-zlib-dir --with-freetype-dir --enable-mbstring --with-libxml-dir=/usr --enable-soap --enable-calendar --with-curl --with-mcrypt --with-bz2 --with-zlib --with-gd --with-pgsql --disable-rpath --enable-inline-optimization --with-zlib --enable-sockets --enable-sysvsem --enable-sysvshm --enable-pcntl --enable-mbregex --with-mhash --enable-zip --with-pcre-regex --with-mysql --with-pdo-mysql --with-mysqli --with-jpeg-dir=/usr --with-png-dir=/usr --enable-gd-native-ttf --with-openssl --with-fpm-user=apache --with-fpm-group=apache --with-libdir=lib64 --enable-ftp --with-imap --with-imap-ssl --with-kerberos --with-gettext --enable-fpm
+
+make
+make install
+
+#The last switch (--enable-fpm) makes sure this PHP version will work with PHP-FPM. 
+#If you want to use this PHP-FPM version with Apache, please use --with-fpm-user=apache and --with-fpm-group=apache; 
+#if you want to use this PHP-FPM version with nginx, please use --with-fpm-user=nginx and --with-fpm-group=nginx.
+
