@@ -16,7 +16,8 @@
 #http://mirrors.linuxeye.com/hhvm-repo/7/x86_64/
 
  echo -n "Installing Hhvm (nginx)... "
- yum install -y git
+ yum install -y git zeromq-devel
+ 
  yum install -y cpp gcc-c++ cmake psmisc {binutils,boost,jemalloc,numactl}-devel \
  {ImageMagick,sqlite,tbb,bzip2,openldap,readline,elfutils-libelf,gmp,lz4,pcre}-devel \
  lib{xslt,event,yaml,vpx,png,zip,icu,mcrypt,memcached,cap,dwarf}-devel \
