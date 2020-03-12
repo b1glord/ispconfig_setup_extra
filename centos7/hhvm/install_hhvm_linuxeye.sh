@@ -49,5 +49,8 @@ echo "" >> /etc/systemd/system/hhvm.service
  echo "[Install]" >> /etc/systemd/system/hhvm.service
  echo "WantedBy=multi-user.target" >> /etc/systemd/system/hhvm.service
 
+systemctl enable hhvm.service
+systemctl start hhvm.service
+
  hhvm --version
  echo -e "[${green}DONE${NC}]\n"
