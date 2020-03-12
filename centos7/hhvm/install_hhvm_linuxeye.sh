@@ -40,8 +40,10 @@ sed -i "s%date.timezone = Asia/Calcutta%date.timezone = Europe/Istanbul%" /etc/h
  echo "After=network.target nginx.service mariadb.service" >> /etc/systemd/system/hhvm.service
  echo "" >> /etc/systemd/system/hhvm.service
  echo "[Service]" >> /etc/systemd/system/hhvm.service
- echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user apache2 --mode daemon -vServer.Type=fastcgi -  vServer.FileSocket=/var/run/hhvm/hhvm.sock" >> /etc/systemd/system/hhvm.service
-#echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -  vServer.FileSocket=/var/run/hhvm/hhvm.sock" >> /etc/systemd/system/hhvm.service
+#echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user apache2 --mode daemon -vServer.Type=fastcgi -vServer.FileSocket=/var/run/hhvm/hhvm.sock" >> /etc/systemd/system/hhvm.service
+echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user apache2 --mode daemon -vServer.Type=fastcgi -vServer.Port=9009" >> /etc/systemd/system/hhvm.service
+#echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.FileSocket=/var/run/hhvm/hhvm.sock" >> /etc/systemd/system/hhvm.service
+echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9010" >> /etc/systemd/system/hhvm.service
 #echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.hdf --user nobody --mode daemon -vServer.Type=fastcgi -vServer.Port=9009" >> /etc/systemd/system/hhvm.service
 echo "" >> /etc/systemd/system/hhvm.service
  echo "[Install]" >> /etc/systemd/system/hhvm.service
