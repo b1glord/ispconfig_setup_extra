@@ -34,7 +34,7 @@
 #sed -i "s/hhvm.server.port = 9001/hhvm.server.port = 9009/" /etc/hhvm/server.ini
 sed -i "s%date.timezone = Asia/Calcutta%date.timezone = Europe/Istanbul%" /etc/hhvm/server.ini
 
-
+touch /etc/systemd/system/hhvm.service
  echo "[Unit]" >> /etc/systemd/system/hhvm.service
  echo "Description=HHVM HipHop Virtual Machine (FCGI)" >> /etc/systemd/system/hhvm.service
  echo "After=network.target nginx.service mariadb.service" >> /etc/systemd/system/hhvm.service
