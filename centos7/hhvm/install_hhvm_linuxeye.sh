@@ -33,7 +33,6 @@ echo "gpgcheck=0" >> /etc/yum.repos.d/hhvm.repo
 sed -i "s/hhvm.server.port = 9001/hhvm.server.port = 9011/" /etc/hhvm/server.ini
 sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
 
-touch /etc/systemd/system/hhvm.service
  echo "[Unit]" >> /etc/systemd/system/hhvm.service
  echo "Description=HHVM HipHop Virtual Machine (FCGI)" >> /etc/systemd/system/hhvm.service
  echo "After=network.target nginx.service mariadb.service" >> /etc/systemd/system/hhvm.service
