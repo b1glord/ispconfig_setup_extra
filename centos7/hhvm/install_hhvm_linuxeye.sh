@@ -11,10 +11,11 @@
 # ISPConfig 3 on your server.
 # Additional /etc/systemd/system/hhvm.service command
 #-vServer.Port=9010
+#-d hhvm.admin_server.port=9011
 #-vPidFile=/var/run/hhvm/pid
 #-vServer.FileSocket=/var/run/fcgiwrap.socket
 #-vServer.FileSocket=/var/run/hhvm/hhvm.sock
-#-d hhvm.admin_server.port=9011
+
 #---------------------------------------------------------------------
 #https://www.howtoforge.com/tutorial/how-to-install-wordpress-with-hhvm-and-nginx-on-centos-7/#step-configure-hhvm-and-nginx
 #http://mirrors.linuxeye.com/hhvm-repo/7/x86_64/
