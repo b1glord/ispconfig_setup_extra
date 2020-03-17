@@ -14,6 +14,7 @@
 #-vServer.Port=9010
 #-d hhvm.admin_server.port=9011
 #-vPidFile=/var/run/hhvm/pid
+#-vPidFile=/var/run/spawn-fcgi.pid
 #-vServer.FileSocket=/var/run/fcgiwrap.socket
 #-vServer.FileSocket=/var/run/hhvm/hhvm.sock
 #---------------------------------------------------------------------
