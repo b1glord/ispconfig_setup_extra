@@ -9,8 +9,9 @@
 # Author: BigLorD <furytr@yandex.com>
 # Description: This script will install all the packages needed to install
 # ISPConfig 3 on your server.
-#
-#
+#-vPidFile=/var/run/hhvm/pid
+#-vServer.FileSocket=/var/run/hhvm/hhvm.sock
+#-vServer.Port=9010
 #---------------------------------------------------------------------
 #https://www.howtoforge.com/tutorial/how-to-install-wordpress-with-hhvm-and-nginx-on-centos-7/#step-configure-hhvm-and-nginx
 #http://mirrors.linuxeye.com/hhvm-repo/7/x86_64/
