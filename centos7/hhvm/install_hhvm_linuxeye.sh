@@ -17,6 +17,10 @@
 #-vPidFile=/var/run/spawn-fcgi.pid
 #-vServer.FileSocket=/var/run/fcgiwrap.socket
 #-vServer.FileSocket=/var/run/hhvm/hhvm.sock
+#
+# Additional /etc/systemd/system/hhvm.service command only nginx (need install fcgiwrap)
+#ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi hhvm.server.file_socket=/var/run/fcgiwrap.socket
+#
 #---------------------------------------------------------------------
 
 #https://www.howtoforge.com/tutorial/how-to-install-wordpress-with-hhvm-and-nginx-on-centos-7/#step-configure-hhvm-and-nginx
@@ -39,6 +43,7 @@ echo "gpgcheck=0" >> /etc/yum.repos.d/hhvm.repo
 # Change the admin port
 sed -i "s/hhvm.server.port = 9001/hhvm.server.port = 9011/" /etc/hhvm/server.ini
 sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
+sed -i "s%;pid = /var/log/hhvm/pid%pid = /var/log/hhvm/pid%" /etc/hhvm/server.ini
 
  echo "[Unit]" >> /etc/systemd/system/hhvm.service
  echo "Description=HHVM HipHop Virtual Machine (FCGI)" >> /etc/systemd/system/hhvm.service
@@ -47,7 +52,7 @@ sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/s
  echo "[Service]" >> /etc/systemd/system/hhvm.service
 
 #echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user apache --mode daemon -vServer.Type=fastcgi -vServer.FileSocket=/var/run/hhvm/hhvm.sock" >> /etc/systemd/system/hhvm.service
-echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user apache --mode daemon -vServer.Type=fastcgi -vServer.Port=9010" >> /etc/systemd/system/hhvm.service
+#echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user apache --mode daemon -vServer.Type=fastcgi -vServer.Port=9010" >> /etc/systemd/system/hhvm.service
 
 echo "" >> /etc/systemd/system/hhvm.service
  echo "[Install]" >> /etc/systemd/system/hhvm.service
