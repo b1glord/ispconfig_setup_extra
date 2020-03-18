@@ -46,7 +46,8 @@ cd hhvm
 cmake3 .
 # Multithreads compiling
 #make -j$(($(nproc)+1))
-make
+#make
+make -j2
 # Compiled?
 ./hphp/hhvm/hhvm --version
 # Install it
