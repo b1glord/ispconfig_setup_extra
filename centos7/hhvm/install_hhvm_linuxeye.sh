@@ -41,7 +41,7 @@ rpm -Uvh http://mirrors.linuxeye.com/hhvm-repo/7/x86_64/hhvm-3.15.3-1.el7.centos
  TIME_ZONE=$(echo "$TIME_ZONE" | sed -n 's/ (.*)$//p')
  sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
 # Configure hhvm.service (optional)
-sed -i "s%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001 -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log%" /etc/hhvm/server.ini
+sed -i "s%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001 -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log%" /etc/systemd/system/hhvm.service
 
 systemctl daemon-reload
 systemctl restart hhvm.service
