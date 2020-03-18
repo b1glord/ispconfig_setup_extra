@@ -40,9 +40,7 @@ echo "gpgcheck=0" >> /etc/yum.repos.d/hhvm.repo
  ln -s /usr/local/bin/hhvm /bin/hhvm
  mkdir /var/run/hhvm/
 # Change the admin port
-sed -i "s/hhvm.server.port = 9001/hhvm.server.port = 9011/" /etc/hhvm/server.ini
 sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
-sed -i "s%;pid = /var/log/hhvm/pid%pid = /var/log/hhvm/pid%" /etc/hhvm/server.ini
 
  echo "[Unit]" >> /etc/systemd/system/hhvm.service
  echo "Description=HHVM HipHop Virtual Machine (FCGI)" >> /etc/systemd/system/hhvm.service
@@ -50,16 +48,15 @@ sed -i "s%;pid = /var/log/hhvm/pid%pid = /var/log/hhvm/pid%" /etc/hhvm/server.in
  echo "" >> /etc/systemd/system/hhvm.service
  echo "[Service]" >> /etc/systemd/system/hhvm.service
 
-#echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user apache --mode daemon -vServer.Type=fastcgi -vServer.FileSocket=/var/run/hhvm/hhvm.sock" >> /etc/systemd/system/hhvm.service
-#echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user apache --mode daemon -vServer.Type=fastcgi -vServer.Port=9010" >> /etc/systemd/system/hhvm.service
+#echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon hhvm.server.type=fastcgi hhvm.server.file_socket=/var/run/hhvm/hhvm.sock" >> /etc/systemd/system/hhvm.service
+#echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon hhvm.server.type=fastcgi hhvm.server.port=9001" >> /etc/systemd/system/hhvm.service
 
 echo "" >> /etc/systemd/system/hhvm.service
  echo "[Install]" >> /etc/systemd/system/hhvm.service
  echo "WantedBy=multi-user.target" >> /etc/systemd/system/hhvm.service
 
-systemctl enable hhvm.service
-systemctl start hhvm.service
 systemctl daemon-reload
+systemctl restart hhvm.service
 
  hhvm --version
  echo -e "[${green}DONE${NC}]\n"
