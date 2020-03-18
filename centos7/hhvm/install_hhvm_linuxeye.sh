@@ -12,11 +12,10 @@
 #
 # Additional /etc/systemd/system/hhvm.service command
 #-vServer.Port=9010
-#-d hhvm.admin_server.port=9011
 #-vPidFile=/var/run/hhvm/pid
 #-vPidFile=/var/run/spawn-fcgi.pid
-#-vServer.FileSocket=/var/run/fcgiwrap.socket
-#-vServer.FileSocket=/var/run/hhvm/hhvm.sock
+#hhvm.server.file_socket=/var/run/fcgiwrap.socket
+#hhvm.server.file_socket=/var/run/hhvm/hhvm.sock
 #
 # Additional /etc/systemd/system/hhvm.service command only nginx (need install fcgiwrap)
 #ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi hhvm.server.file_socket=/var/run/fcgiwrap.socket
