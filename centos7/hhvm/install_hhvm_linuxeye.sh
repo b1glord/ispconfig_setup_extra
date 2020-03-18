@@ -12,7 +12,6 @@
 #
 # Additional /etc/systemd/system/hhvm.service command
 #-vServer.Port=9010
-#-vPidFile=/var/run/hhvm/pid
 #-vPidFile=/var/run/spawn-fcgi.pid
 #hhvm.server.file_socket=/var/run/fcgiwrap.socket
 #hhvm.server.file_socket=/var/run/hhvm/hhvm.sock
