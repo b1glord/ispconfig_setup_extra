@@ -29,10 +29,9 @@
 lib{xslt,event,yaml,vpx,png,zip,icu,mcrypt,memcached,cap,dwarf}-devel \
 {unixODBC,expat,mariadb}-devel lib{edit,curl,xml2,xslt}-devel \
 glog-devel oniguruma-devel ocaml gperf enca libjpeg-turbo-devel openssl-devel \
-mariadb mariadb-server make libc-client 
+mariadb mariadb-server make libc-client zeromq-devel
 
   echo -n "Installing HHVM HipHop Virtual Machine (FCGI)... "
-   yum -y install zeromq-devel
 rpm -Uvh http://mirrors.linuxeye.com/hhvm-repo/7/x86_64/hhvm-3.15.3-1.el7.centos.x86_64.rpm
 
 # Configure Hhvm (optional)
