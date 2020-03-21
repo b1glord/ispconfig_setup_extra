@@ -13,9 +13,8 @@ sed -i "s/group = apache/group = nginx/" /etc/opt/remi/php70/php-fpm.d/www.conf
 #### Start Service
 ```
 systemctl start php70-php-fpm.service
+systemctl restart php70-php-fpm.service
 ```
-
-
 
 ### IspConfig => Additional PHP Versions
 #### Add Hhvm
