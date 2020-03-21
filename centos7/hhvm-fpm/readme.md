@@ -20,9 +20,9 @@ systemctl restart php70-php-fpm.service
 #### Add Hhvm
 
 * Path to the PHP-FPM init script 	  :	
-``/etc/opt/remi/php70/sysconfig/php-fpm``
+```/etc/opt/remi/php70/sysconfig/php-fpm```
 * Path to the php.ini directory   	  :	
-``/etc/hhvm/php.ini``
+```/etc/hhvm/php.ini```
 * Path to the PHP-FPM pool directory	:	
-``/etc/opt/remi/php70/php-fpm.d/``
+```/etc/opt/remi/php70/php-fpm.d/```
 
