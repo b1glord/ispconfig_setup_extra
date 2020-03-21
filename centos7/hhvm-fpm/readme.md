@@ -12,8 +12,9 @@ sed -i "s/group = apache/group = nginx/" /etc/opt/remi/php70/php-fpm.d/www.conf
 ```
 #### Start Service
 ```
-systemctl start php70-php-fpm.service
-systemctl restart php70-php-fpm.service
+systemctl start php70-php-fpm
+systemctl restart php70-php-fpm
+systemctl status php70-php-fpm
 ```
 
 ### IspConfig => Additional PHP Versions
