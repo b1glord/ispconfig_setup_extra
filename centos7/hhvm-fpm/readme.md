@@ -1,5 +1,5 @@
 ### IspConfig Additional PHP Versions kısmında Hhvm ile kullanmak icin ozel php-fpm modulu
-#### port:9001 dinleyecek sekilde duzenlenecek
+#### port:9001 dinleyecek sekilde duzenledim
 
 ```
 rpm -ivh https://github.com/b1glord/ispconfig_setup_extra/raw/master/centos7/hhvm-fpm/php70-php-fpm-7.0.33-18.el7.remi.x86_64.rpm --nodeps
