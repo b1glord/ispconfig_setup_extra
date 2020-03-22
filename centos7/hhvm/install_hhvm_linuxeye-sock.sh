@@ -41,7 +41,7 @@ echo "gpgcheck=0" >> /etc/yum.repos.d/hhvm.repo
 
 # https://www.howtoforge.com/tutorial/how-to-install-wordpress-with-hhvm-and-nginx-on-centos-7/#step-install-hhvm
 #Replace the hhvm.server.port on line 7 with unix socket configuration below:
-
+#https://udinra.com/blog/hhvm-fastcgi-nginx-speedup-php
 #hhvm.server.file_socket = /var/run/hhvm/hhvm.sock
 
 
