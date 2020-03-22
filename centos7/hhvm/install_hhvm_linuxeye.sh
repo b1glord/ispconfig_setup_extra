@@ -39,6 +39,7 @@ echo "gpgcheck=0" >> /etc/yum.repos.d/hhvm.repo
  TIME_ZONE=$(echo "$TIME_ZONE" | sed -n 's/ (.*)$//p')
  sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
 
+# https://www.howtoforge.com/tutorial/how-to-install-wordpress-with-hhvm-and-nginx-on-centos-7/#step-install-hhvm
 #Replace the hhvm.server.port on line 7 with unix socket configuration below:
 
 #hhvm.server.file_socket = /var/run/hhvm/hhvm.sock
