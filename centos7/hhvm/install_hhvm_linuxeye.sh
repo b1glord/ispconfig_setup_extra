@@ -11,7 +11,7 @@
 # ISPConfig 3 on your server.
 #
 # Additional /etc/systemd/system/hhvm.service command
-#
+#-vServer.FileSocket=/var/run/hhvm/hhvm.sock
 #hhvm.server.file_socket=/var/run/hhvm/hhvm.sock
 #
 #---------------------------------------------------------------------
