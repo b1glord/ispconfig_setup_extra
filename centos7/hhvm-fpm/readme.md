@@ -28,11 +28,11 @@ systemctl status php70-php-fpm
 ```/etc/opt/remi/php70/php-fpm.d/```
 
 
-### asagidaki adreste Degisik bir tetikleme yontemi var deneme yapacagim
+### asagidaki adreste Degisik bir tetikleme yontemi ile toplu restart
 #### WantsTo yerine BindsTo kullanarak tek komutla digerlerini de tetiklemek sanirim mumkun
 * https://faq-howto.com/centos-additional-php-versions-with-ispconfig3/
 
-####Asagidaki ornekteki gibi
+#### Asagidaki ornekteki gibi
 ```
 vi /lib/systemd/system/php70-fpm.service
 
