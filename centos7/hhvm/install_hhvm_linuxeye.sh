@@ -11,37 +11,40 @@
 # ISPConfig 3 on your server.
 #
 # Additional /etc/systemd/system/hhvm.service command
-#-vServer.Port=9010
-#-vPidFile=/var/run/spawn-fcgi.pid
-#hhvm.server.file_socket=/var/run/fcgiwrap.socket
-#hhvm.server.file_socket=/var/run/hhvm/hhvm.sock
 #
-# Additional /etc/systemd/system/hhvm.service command only nginx (need install fcgiwrap)
-#ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi hhvm.server.file_socket=/var/run/fcgiwrap.socket
+#hhvm.server.file_socket=/var/run/hhvm/hhvm.sock
 #
 #---------------------------------------------------------------------
 
 #https://www.howtoforge.com/tutorial/how-to-install-wordpress-with-hhvm-and-nginx-on-centos-7/#step-configure-hhvm-and-nginx
 #http://mirrors.linuxeye.com/hhvm-repo/7/x86_64/
 
-  yum -y install cpp gcc-c++ cmake git psmisc {binutils,boost,jemalloc,numactl}-devel \
-{ImageMagick,sqlite,tbb,bzip2,openldap,readline,elfutils-libelf,gmp,lz4,pcre}-devel \
-lib{xslt,event,yaml,vpx,png,zip,icu,mcrypt,memcached,cap,dwarf}-devel \
-{unixODBC,expat,mariadb}-devel lib{edit,curl,xml2,xslt}-devel \
-glog-devel oniguruma-devel ocaml gperf enca libjpeg-turbo-devel openssl-devel \
-mariadb mariadb-server make libc-client zeromq-devel
+#Add Repository Hvvm PreBuild Installation
+touch /etc/yum.repos.d/hhvm.repo
+echo "[hhvm]" >> /etc/yum.repos.d/hhvm.repo
+echo "name=gleez hhvm-repo" >> /etc/yum.repos.d/hhvm.repo
+echo "baseurl=http://mirrors.linuxeye.com/hhvm-repo/7/\$basearch/" >> /etc/yum.repos.d/hhvm.repo
+echo "enabled=1" >> /etc/yum.repos.d/hhvm.repo
+echo "gpgcheck=0" >> /etc/yum.repos.d/hhvm.repo
 
   echo -n "Installing HHVM HipHop Virtual Machine (FCGI)... "
-rpm -Uvh http://mirrors.linuxeye.com/hhvm-repo/7/x86_64/hhvm-3.15.3-1.el7.centos.x86_64.rpm
+   yum -y install hhvm
 
 # Configure Hhvm (optional)
+#wget https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/centos7/hhvm/config.hdf -P /etc/hhvm/
+#wget https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/centos7/hhvm/static.mime-types.hdf -P /usr/share/hhvm/hdf/
  mkdir /var/run/hhvm
  mkdir /var/log/hhvm
+
  TIME_ZONE=$(echo "$TIME_ZONE" | sed -n 's/ (.*)$//p')
  sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
 
-# Configure hhvm.service (optional)
-#sed -i "s%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001 -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log%" /etc/systemd/system/hhvm.service
+# Open Log (optional) 
+sed -i "s%;pid = /var/log/hhvm/pid%pid = /var/log/hhvm/pid%" /etc/hhvm/server.ini
+
+
+# Configure Log files hhvm.service (optional)
+sed -i "s%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001 -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log%" /etc/systemd/system/hhvm.service
 
 systemctl daemon-reload
 systemctl restart hhvm.service
