@@ -39,6 +39,11 @@ echo "gpgcheck=0" >> /etc/yum.repos.d/hhvm.repo
  TIME_ZONE=$(echo "$TIME_ZONE" | sed -n 's/ (.*)$//p')
  sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
 
+#Replace the hhvm.server.port on line 7 with unix socket configuration below:
+
+#hhvm.server.file_socket = /var/run/hhvm/hhvm.sock
+
+
 # Open Log (optional) 
 sed -i "s%;pid = /var/log/hhvm/pid%pid = /var/log/hhvm/pid%" /etc/hhvm/server.ini
 
