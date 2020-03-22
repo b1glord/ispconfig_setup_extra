@@ -31,8 +31,11 @@ systemctl status php70-php-fpm
 ### asagidaki adreste Degisik bir tetikleme yontemi var deneme yapacagim
 #### WantsTo yerine BindsTo kullanarak tek komutla digerlerini de tetiklemek sanirim mumkun
 * https://faq-howto.com/centos-additional-php-versions-with-ispconfig3/
-vi /lib/systemd/system/php70-fpm.service
+
+####Asagidaki ornekteki gibi
 ```
+vi /lib/systemd/system/php70-fpm.service
+
 [Unit] Description=The PHP FastCGI Process Manager
 After=syslog.target network.target
 BindsTo=php-fpm.service 
