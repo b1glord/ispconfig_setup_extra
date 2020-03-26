@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 #---------------------------------------------------------------------
-# php_redhat.sh
+# php_remi.sh
 #
 # ISPConfig 3 centos7 multi php version installer
 #
-# Script: php_redhat.sh
+# Script: php_remi.sh
 # Version: 1.0.0
 # Author: BigLorD <furytr@yandex.com>
 # Description: This script will install all the packages needed to install
