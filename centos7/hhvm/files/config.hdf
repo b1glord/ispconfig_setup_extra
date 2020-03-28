@@ -1,7 +1,7 @@
 PidFile = /var/hhvm/hhvm.pid
 
 Server {
-  Port = 9001
+  Port = 9000
   SourceRoot = /var/www/
   DefaultDocument = index.php
 }
