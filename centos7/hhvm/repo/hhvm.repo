@@ -1,0 +1,5 @@
+[hhvm]
+name=gleez hhvm-repo
+baseurl=http://mirrors.linuxeye.com/hhvm-repo/7/\$basearch/
+enabled=1
+gpgcheck=0

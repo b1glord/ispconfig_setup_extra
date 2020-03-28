@@ -4,7 +4,7 @@ test -x /usr/bin/hhvm || exit 0
 
 case "$1" in
   start)
-    /usr/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9000 -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log
+    /usr/bin/hhvm --config /etc/hhvm/server.hdf --user www-data --mode daemon -vServer.Type=fastcgi -vServer.Port=9000
     ;;
   stop)
     start-stop-daemon --stop --quiet --oknodo --pidfile /var/run/hhvm/pid
