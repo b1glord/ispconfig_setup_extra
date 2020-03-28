@@ -55,14 +55,14 @@ sed -i "s%;pid = /var/log/hhvm/pid%pid = /var/log/hhvm/pid%" /etc/hhvm/server.in
  echo "" >> /etc/systemd/system/hhvm.service
  echo "[Service]" >> /etc/systemd/system/hhvm.service
 
-echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001" >> /etc/systemd/system/hhvm.service
+echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.FileSocket=/var/run/hhvm/hhvm.sock" >> /etc/systemd/system/hhvm.service
 
 echo "" >> /etc/systemd/system/hhvm.service
  echo "[Install]" >> /etc/systemd/system/hhvm.service
  echo "WantedBy=multi-user.target" >> /etc/systemd/system/hhvm.service
 
 # Configure Log files hhvm.service (optional)
-sed -i "s%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001 -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log%" /etc/systemd/system/hhvm.service
+sed -i "s%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.FileSocket=/var/run/hhvm/hhvm.sock -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log%" /etc/systemd/system/hhvm.service
 
 systemctl daemon-reload
 systemctl restart hhvm
