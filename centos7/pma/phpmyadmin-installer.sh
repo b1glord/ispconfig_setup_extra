@@ -1,71 +1,71 @@
-#!/bin/bash
-README="Centos için PHPMyAdmin kurulum betiği
-
-Php 5 ve Php 7 de ortak calısacak bir surum yuklemek
-
-Bu yukleme deneysel bir senaryodur.  
-
-Güvenli bir kurulumla sonuçlanmayabilir.
-
-Kullanmak Kendi Sorumluluğunuzdadır
-
-Komut dosyası aşağıdaki dağıtımlarda test edilmiştir:
- - Centos 7
- - Centos 8
-
-
-Bu komut dosyası ...
-  - mevcut PHPMyAdmin kurulumunuzu ve yapılandırmanızı kaldırın
-  - Mevcut Olan Apache2, PHP ve mysql/mariadb icin gerekli ek paket kurulumu yapar
-  - MariaDB/Mysql sunucusunu kurulumu Yapar
-  - PHPMyAdmin'i resmi kaynaktan yükler ve yapılandırır
-  - yeni kurulan MariaDB'nin kök şifresini değiştirir
-  - 'phpmyadmin' @ 'localhost' veritabanı kullanıcısını siler ve yeniden oluşturur
-
-Katkilar icin: https://github.com/b1glord/ispconfig_setup_extra/blob/master/centos7/pma/phpmyadmin-installer.sh
-
+#!/usr/bin/env bash
+#Centos için PHPMyAdmin kurulum betiği
+#
+#Php 5 ve Php 7 de ortak calısacak bir surum yuklemek
+#
+#Bu yukleme deneysel bir senaryodur.  
+#
+#Güvenli bir kurulumla sonuçlanmayabilir.
+#
+#Kullanmak Kendi Sorumluluğunuzdadır
+#
+#Komut dosyası aşağıdaki dağıtımlarda test edilmiştir:
+# - Centos 7
+# - Centos 8
+#
+#
+# Bu komut dosyası ...
+#  - mevcut PHPMyAdmin kurulumunuzu ve yapılandırmanızı kaldırın
+#  - Mevcut Olan Apache2, PHP ve mysql/mariadb icin gerekli ek paket kurulumu yapar
+#  - MariaDB/Mysql sunucusunu kurulumu Yapar
+#  - PHPMyAdmin'i resmi kaynaktan yükler ve yapılandırır
+#  - yeni kurulan MariaDB'nin kök şifresini değiştirir
+#  - 'phpmyadmin' @ 'localhost' veritabanı kullanıcısını siler ve yeniden oluşturur
+#
+#Katkilar icin: https://github.com/b1glord/ispconfig_setup_extra/blob/master/centos7/pma/phpmyadmin-installer.sh
+#
 #####
 # Asagidaki secenekleri yapılandırın:
 #####
-
+#
 # URL yayınlanan zip dosyasını almak için (29.04.2019)
 PMA_URL=https://files.phpmyadmin.net/phpMyAdmin/4.8.5/phpMyAdmin-4.8.5-all-languages.zip
-
+#
 # Zip'in içerdiği bir dizin (".zip" olmadan dosya adı olmalıdır)
 PMA_DIR=phpMyAdmin-4.8.5-all-languages
-
+#
 # 'Phpmyadmin' kullanıcısı için şifre belirle
 # Bunu icin gerçekten güçlü bir sifre ayarlamanız gerekir ...
 PHPMYNEWPW=PHPMyPass
-
+#
 # MySQL / MariaDB kök parolası.
 # Yeni kurulumlarda varsayılan değer boş
 DBROOTPW=
-
+#
 # Yeni MariaDB / MySQL veritabanı kök kullanıcı şifresi.
 # Boş veya ayarlı değilse ya da sunucu önceden kurulmuşsa atlandı.
 # Bunun icin gerçekten güçlü bir sifre ayarlamanız gerekir ...
 DBROOTNEWPW=SQLRootPass
-
+#
 # Çağrınız MariaDB (MySQL) sunucusunu kurun.
 # Boş veya ayarlı değilse ya da sunucu önceden kurulmuşsa atlandı.
 #DBSERVER=mysql-server
 DBSERVER=mariadb-server
-
+#
 #####
 # Ne yaptığını gerçekten bilmiyorsan bunlara dokunma!
 #####
-
+#
 RANDOMSTRING=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
 WORKDIR=/tmp/phpmyadmin-$RANDOMSTRING
 INSTALLDIR=/usr/share/phpmyadmin
 CACHEDIR=/var/lib/phpmyadmin
 CONFIGDIR=/etc/phpmyadmin
-
+#
 #####
 # İşe başlayalım!
 #####
-
+#
 if [ $(id -u) -ne 0 ]; then echo "Bu komut dosyasını kök ayrıcalıklarıyla çalıstır."; exit 1; fi
 cat /etc/centos-release >/dev/null
 if [ $? -ne 0 ]; then echo "centos-release bulunamadı, devam edilemez."; exit 1; fi
@@ -76,7 +76,7 @@ which wget >/dev/null
 if [ $? -ne 0 ]; then echo "wget bulunamadı, devam edilemez."; exit 1; fi
 which egrep >/dev/null
 if [ $? -ne 0 ]; then echo "egrep bulunamadı, devam edilemez."; exit 1; fi
-
+#
 ############### YUM BLOCK ###############
 echo "Distribution: $(centos-release -sd) ($(centos-release -sc))"
 case $(centos-release -sc) in
@@ -88,13 +88,6 @@ case $(centos-release -sc) in
         PACKAGES="unzip apache2 libapache2-mod-php php php-mysqli php-pear php-zip \
             php-bz2 php-tcpdf php-mbstring php-xml php-php-gettext php-phpseclib php-curl php-gd"
         ;;
-    xenial)
-        PACKAGES="unzip apache2 libapache2-mod-php php php-mysqli php-pear php-zip \
-            php-bz2 php-tcpdf php-mbstring php-mcrypt php-xml php-gettext php-phpseclib php-curl php-gd"
-        ;;
-    jessie|trusty)
-        PACKAGES="unzip apache2 libapache2-mod-php5 php5 php5-mysql php-tcpdf php-gettext php-seclib php5-curl php5-gd"
-        ;;
     *)
         echo "Your distribution is not yet supported - perhaps it's just not listed yet."
         echo "Contributions welcome: https://github.com/direc85/phpmyadmin-installer"
@@ -102,7 +95,7 @@ case $(centos-release -sc) in
         ;;
 esac
 
-if [ $(apt list --installed 2>/dev/null | grep phpmyadmin | wc -l) -eq 1 ]; then
+if [ $(yum history 2>/dev/null | grep phpmyadmin | wc -l) -eq 1 ]; then
     echo "Purging phpmyadmin package..."
     yum remove -y --purge phpmyadmin >/dev/null
 fi
