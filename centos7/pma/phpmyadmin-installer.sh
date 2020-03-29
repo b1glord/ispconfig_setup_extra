@@ -16,16 +16,16 @@ Komut dosyası aşağıdaki dağıtımlarda test edilmiştir:
 
 Bu komut dosyası ...
   - mevcut PHPMyAdmin kurulumunuzu ve yapılandırmanızı kaldırın
-  - Apache2, PHP ve birkaç paket daha kurun
-  - yoksa MariaDB sunucusunu kurun (veya MySQL sunucusu)
-  - PHPMyAdmin'i resmi kaynaktan yükleyin ve yapılandırın
-  - yeni kurulan MariaDB'nin kök şifresini değiştirin
-  - 'phpmyadmin' @ 'localhost' veritabanı kullanıcısını silin ve yeniden oluşturun
+  - Mevcut Olan Apache2, PHP ve mysql/mariadb icin gerekli ek paket kurulumu yapar
+  - MariaDB/Mysql sunucusunu kurulumu Yapar
+  - PHPMyAdmin'i resmi kaynaktan yükler ve yapılandırır
+  - yeni kurulan MariaDB'nin kök şifresini değiştirir
+  - 'phpmyadmin' @ 'localhost' veritabanı kullanıcısını siler ve yeniden oluşturur
 
-Katkılar Icın Adres: https://github.com/b1glord/ispconfig_setup_extra/blob/master/centos7/pma/phpmyadmin-installer.sh
+Katkilar icin: https://github.com/b1glord/ispconfig_setup_extra/blob/master/centos7/pma/phpmyadmin-installer.sh
 
 #####
-# Aşağıdaki seçenekleri yapılandırın:
+# Asagidaki secenekleri yapılandırın:
 #####
 
 # URL yayınlanan zip dosyasını almak için (29.04.2019)
@@ -66,7 +66,7 @@ CONFIGDIR=/etc/phpmyadmin
 # İşe başlayalım!
 #####
 
-if [ $(id -u) -ne 0 ]; then echo "Bu komut dosyasını kök ayrıcalıklarıyla çalıştır."; exit 1; fi
+if [ $(id -u) -ne 0 ]; then echo "Bu komut dosyasını kök ayrıcalıklarıyla çalıstır."; exit 1; fi
 cat /etc/centos-release >/dev/null
 if [ $? -ne 0 ]; then echo "centos-release bulunamadı, devam edilemez."; exit 1; fi
 which yum >/dev/null
@@ -78,9 +78,8 @@ which egrep >/dev/null
 if [ $? -ne 0 ]; then echo "egrep bulunamadı, devam edilemez."; exit 1; fi
 
 ############### YUM BLOCK ###############
-cat /etc/centos-release grep -iq
-echo "Distribution: $(centos-release -sd) ($(lsb_release -sc))"
-case $(lsb_release -sc) in
+echo "Distribution: $(centos-release -sd) ($(centos-release -sc))"
+case $(centos-release -sc) in
     buster)
         PACKAGES="unzip apache2 libapache2-mod-php php php-mysqli php-pear php-zip \
             php-bz2 php-mbstring php-xml php-php-gettext php-phpseclib php-curl php-gd"
@@ -105,7 +104,7 @@ esac
 
 if [ $(apt list --installed 2>/dev/null | grep phpmyadmin | wc -l) -eq 1 ]; then
     echo "Purging phpmyadmin package..."
-    apt-get remove -y --purge phpmyadmin >/dev/null
+    yum remove -y --purge phpmyadmin >/dev/null
 fi
 
 if [ $(apt list --installed 2>/dev/null | egrep "mariadb-server|mysql-server" | wc -l) -ge 1 ]; then
