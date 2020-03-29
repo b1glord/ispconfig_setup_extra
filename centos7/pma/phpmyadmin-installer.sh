@@ -80,7 +80,6 @@ if [ $? -ne 0 ]; then echo "egrep bulunamadı, devam edilemez."; exit 1; fi
 ############### YUM BLOCK ###############
 echo "Distribution: $(centos-release -sd) ($(centos-release -sc))"
 case $(centos-release -sc) in
-    buster)
         PACKAGES="unzip apache2 libapache2-mod-php php php-mysqli php-pear php-zip \
             php-bz2 php-mbstring php-xml php-php-gettext php-phpseclib php-curl php-gd"
         ;;
