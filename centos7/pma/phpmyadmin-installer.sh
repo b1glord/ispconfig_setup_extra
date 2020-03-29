@@ -1,73 +1,59 @@
 #!/bin/bash
-README="PHPMyAdmin install script for Centos
+README="Centos için PHPMyAdmin kurulum betiği
 
 Php 5 ve Php 7 de ortak calısacak bir surum yuklemek
 
-    This is a blunt and experimental script.
-    
-      It may not result in a secure setup.
+Bu yukleme deneysel bir senaryodur.  
 
-           Use at your own risk.
+Güvenli bir kurulumla sonuçlanmayabilir.
 
-The script is tested on the following distributions:
+Kullanmak Kendi Sorumluluğunuzdadır
+
+Komut dosyası aşağıdaki dağıtımlarda test edilmiştir:
  - Centos 7
  - Centos 8
 
 
-This script will...
- - remove your existing PHPMyAdmin installation and configuration
- - install Apache2, PHP and a few other packages
- - install MariaDB server if you don't have it (or MySQL server)
- - install and configure PHPMyAdmin from the official source
- - change the root password of the newly-installed MariaDB
- - delete and recreate database user 'phpmyadmin'@'localhost'
+Bu komut dosyası ...
+  - mevcut PHPMyAdmin kurulumunuzu ve yapılandırmanızı kaldırın
+  - Apache2, PHP ve birkaç paket daha kurun
+  - yoksa MariaDB sunucusunu kurun (veya MySQL sunucusu)
+  - PHPMyAdmin'i resmi kaynaktan yükleyin ve yapılandırın
+  - yeni kurulan MariaDB'nin kök şifresini değiştirin
+  - 'phpmyadmin' @ 'localhost' veritabanı kullanıcısını silin ve yeniden oluşturun
 
-Contributions welcome: https://github.com/direc85/phpmyadmin-installer
-
-This script is provided on an 'as is' basis, without warranty of any kind. Use
-at your own risk! Under no circumstances shall the author(s) or contributor(s)
-be liable for damages resulting directly or indirectly from the use or non-use
-of this script.
-
-No, seriously. Read the script through before you try it out.
-
-This script is licensed under GPL2.
-
-(c) 2019 Matti Viljanen (direc85)"
+Katkılar Icın Adres: https://github.com/b1glord/ispconfig_setup_extra/blob/master/centos7/pma/phpmyadmin-installer.sh
 
 #####
-# Configure the following options:
+# Aşağıdaki seçenekleri yapılandırın:
 #####
 
-# URL to get the released zip file (29.04.2019)
-# This script can not yet handle the
-# upcoming PHPMyAdmin 5.0, which requires PHP 7.1.0
-# https://phpmyadmin.readthedocs.io/en/latest/faq.html#faq1-31
+# URL yayınlanan zip dosyasını almak için (29.04.2019)
 PMA_URL=https://files.phpmyadmin.net/phpMyAdmin/4.8.5/phpMyAdmin-4.8.5-all-languages.zip
 
-# The one directory that the zip contains (should be the filename without ".zip")
+# Zip'in içerdiği bir dizin (".zip" olmadan dosya adı olmalıdır)
 PMA_DIR=phpMyAdmin-4.8.5-all-languages
 
-# Set password for user 'myphpadmin'
-# You really should set this to something strong...
+# 'Phpmyadmin' kullanıcısı için şifre belirle
+# Bunu icin gerçekten güçlü bir sifre ayarlamanız gerekir ...
 PHPMYNEWPW=PHPMyPass
 
-# MySQL/MariaDB root password.
-# On new installs, the default is empty
+# MySQL / MariaDB kök parolası.
+# Yeni kurulumlarda varsayılan değer boş
 DBROOTPW=
 
-# New MariaDB/MySQL database root user password.
-# Skipped if empty or not set, or if server is already installed.
-# You really should set this to something strong...
+# Yeni MariaDB / MySQL veritabanı kök kullanıcı şifresi.
+# Boş veya ayarlı değilse ya da sunucu önceden kurulmuşsa atlandı.
+# Bunun icin gerçekten güçlü bir sifre ayarlamanız gerekir ...
 DBROOTNEWPW=SQLRootPass
 
-# Install MariaDB (MySQL) server, your call.
-# Skipped if empty or not set, or if server is already installed.
+# Çağrınız MariaDB (MySQL) sunucusunu kurun.
+# Boş veya ayarlı değilse ya da sunucu önceden kurulmuşsa atlandı.
 #DBSERVER=mysql-server
 DBSERVER=mariadb-server
 
 #####
-# Do not touch these, unless you **really** know what you are doing!
+# Ne yaptığını gerçekten bilmiyorsan bunlara dokunma!
 #####
 
 RANDOMSTRING=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
@@ -77,22 +63,23 @@ CACHEDIR=/var/lib/phpmyadmin
 CONFIGDIR=/etc/phpmyadmin
 
 #####
-# Let's get down to business!
+# İşe başlayalım!
 #####
 
-if [ $(id -u) -ne 0 ]; then echo "Run this script with root privileges."; exit 1; fi
-which lsb_release >/dev/null
-if [ $? -ne 0 ]; then echo "lsb_release not found, can't continue."; exit 1; fi
-which apt-get >/dev/null
-if [ $? -ne 0 ]; then echo "apt-get not found, can't continue."; exit 1; fi
+if [ $(id -u) -ne 0 ]; then echo "Bu komut dosyasını kök ayrıcalıklarıyla çalıştır."; exit 1; fi
+cat /etc/centos-release >/dev/null
+if [ $? -ne 0 ]; then echo "centos-release bulunamadı, devam edilemez."; exit 1; fi
+which yum >/dev/null
+if [ $? -ne 0 ]; then echo "yum bulunamadı, devam edilemez."; exit 1; fi
+yum -y install wget
 which wget >/dev/null
-if [ $? -ne 0 ]; then echo "wget not found, can't continue."; exit 1; fi
+if [ $? -ne 0 ]; then echo "wget bulunamadı, devam edilemez."; exit 1; fi
 which egrep >/dev/null
-if [ $? -ne 0 ]; then echo "egrep not found, can't continue."; exit 1; fi
+if [ $? -ne 0 ]; then echo "egrep bulunamadı, devam edilemez."; exit 1; fi
 
-############### APT BLOCK ###############
-
-echo "Distribution: $(lsb_release -sd) ($(lsb_release -sc))"
+############### YUM BLOCK ###############
+cat /etc/centos-release grep -iq
+echo "Distribution: $(centos-release -sd) ($(lsb_release -sc))"
 case $(lsb_release -sc) in
     buster)
         PACKAGES="unzip apache2 libapache2-mod-php php php-mysqli php-pear php-zip \
