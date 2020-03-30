@@ -4,10 +4,9 @@ cd /usr/local/src/
 git clone git://github.com/gnosek/fcgiwrap.git
 cd fcgiwrap
 autoreconf -i
-./configure
+./configure --prefix=/usr/sbin
 make
 make install
-
 
 
 yum -y install spawn-fcgi
@@ -15,7 +14,7 @@ yum -y install spawn-fcgi
 #Open /etc/sysconfig/spawn-fcgi...
 echo '
 FCGI_SOCKET=/var/run/fcgiwrap.socket
-FCGI_PROGRAM=/usr/local/sbin/fcgiwrap
+FCGI_PROGRAM=/usr/sbin/fcgiwrap
 FCGI_USER=apache
 FCGI_GROUP=apache
 FCGI_EXTRA_OPTIONS="-M 0770"
@@ -33,3 +32,4 @@ chkconfig spawn-fcgi on
 #... and start it as follows:
 
 systemctl start spawn-fcgi
+systemctl status spawn-fcgi
