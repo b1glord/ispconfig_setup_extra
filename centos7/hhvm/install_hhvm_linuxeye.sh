@@ -20,12 +20,13 @@
 #http://mirrors.linuxeye.com/hhvm-repo/7/x86_64/
 
 #Add Repository Hvvm PreBuild Installation
-touch /etc/yum.repos.d/hhvm.repo
-echo "[hhvm]" >> /etc/yum.repos.d/hhvm.repo
-echo "name=gleez hhvm-repo" >> /etc/yum.repos.d/hhvm.repo
-echo "baseurl=http://mirrors.linuxeye.com/hhvm-repo/7/\$basearch/" >> /etc/yum.repos.d/hhvm.repo
-echo "enabled=1" >> /etc/yum.repos.d/hhvm.repo
-echo "gpgcheck=0" >> /etc/yum.repos.d/hhvm.repo
+  cat > /etc/yum.repos.d/hhvm.repo << EOF
+[hhvm]
+name=gleez hhvm-repo
+baseurl=http://mirrors.linuxeye.com/hhvm-repo/7/\$basearch/
+enabled=1
+gpgcheck=0
+EOF
 
   echo -n "Installing HHVM HipHop Virtual Machine (FCGI)... "
    yum -y install hhvm
