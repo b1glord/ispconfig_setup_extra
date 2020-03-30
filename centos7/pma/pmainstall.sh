@@ -78,38 +78,40 @@ which egrep >/dev/null
 if [ $? -ne 0 ]; then echo "egrep bulunamadı, devam edilemez."; exit 1; fi
 #
 ############### YUM BLOCK ###############
-echo "Distribution: $(centos-release -sd) ($(centos-release -sc))"
-case $(centos-release -sc) in
-        PACKAGES="unzip apache2 libapache2-mod-php php php-mysqli php-pear php-zip \
-            php-bz2 php-mbstring php-xml php-php-gettext php-phpseclib php-curl php-gd"
-        ;;
-    stretch|buster|bionic|disco)
-        PACKAGES="unzip apache2 libapache2-mod-php php php-mysqli php-pear php-zip \
-            php-bz2 php-tcpdf php-mbstring php-xml php-php-gettext php-phpseclib php-curl php-gd"
-        ;;
-    *)
-        echo "Your distribution is not yet supported - perhaps it's just not listed yet."
-        echo "Contributions welcome: https://github.com/direc85/phpmyadmin-installer"
-        exit 1
-        ;;
-esac
+#echo "Distribution: $(centos-release -sd) ($(centos-release -sc))"
+       yum -y install unzip php php-fpm
+       yum -y install php-pear php-mysqli php-zip php-bcmath php-fedora-autoloader php-php-gettext php-tcpdf php-tcpdf-dejavu-sans-fonts php-mcrypt
+#case $(centos-release -sc) in
+#        PACKAGES="unzip apache2 libapache2-mod-php php php-mysqli php-pear php-zip \
+#            php-bz2 php-mbstring php-xml php-php-gettext php-phpseclib php-curl php-gd"
+#        ;;
+#    stretch|buster|bionic|disco)
+#        PACKAGES="unzip apache2 libapache2-mod-php php php-mysqli php-pear php-zip \
+#            php-bz2 php-tcpdf php-mbstring php-xml php-php-gettext php-phpseclib php-curl php-gd"
+#        ;;
+#    *)
+#        echo "Your distribution is not yet supported - perhaps it's just not listed yet."
+#        echo "Contributions welcome: https://github.com/direc85/phpmyadmin-installer"
+#        exit 1
+#        ;;
+#esac
 
 if [ $(yum history 2>/dev/null | grep phpmyadmin | wc -l) -eq 1 ]; then
     echo "Purging phpmyadmin package..."
-    yum remove -y --purge phpmyadmin >/dev/null
+    yum -y autoremove phpmyadmin >/dev/null
 fi
 
-if [ $(apt list --installed 2>/dev/null | egrep "mariadb-server|mysql-server" | wc -l) -ge 1 ]; then
+if [ $(yum history 2>/dev/null | egrep "mariadb-server|mysql-server" | wc -l) -ge 1 ]; then
     echo "MariaDB/MySQL server detected."
     DBSERVER=
     DBROOTNEWPW=
 fi
 
 echo "Installing packages (this may take some time)..."
-DEBIAN_FRONTEND=noninteractive apt-get install -y $PACKAGES $DBSERVER >/dev/null
+yum install -y $PACKAGES $DBSERVER >/dev/null
 if [ $? -ne 0 ]; then
-    echo "Error installing packages using apt-get"
-    echo "Command: apt-get install -y $PACKAGES"
+    echo "Error installing packages using yum"
+    echo "Command: yum install -y $PACKAGES"
     exit 1
 fi
 
