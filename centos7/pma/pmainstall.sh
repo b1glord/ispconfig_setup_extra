@@ -27,6 +27,14 @@
 #####
 # Asagidaki secenekleri yapılandırın:
 #####
+################--- Some functions used many times below ---####################
+# Random password generator function
+# $(passwordgen);
+passwordgen() {
+    l=$1
+    [ "$l" == "" ] && l=16
+    tr -dc A-Za-z0-9 < /dev/urandom | head -c ${l} | xargs
+}
 #
 # URL yayınlanan zip dosyasını almak için (29.04.2019)
 PMA_URL=https://files.phpmyadmin.net/phpMyAdmin/4.8.5/phpMyAdmin-4.8.5-all-languages.zip
@@ -288,3 +296,48 @@ else
     echo "Database root password not changed."
 fi
 echo "PHPMyAdmin credentials set to \"phpmyadmin\" / \"$PHPMYNEWPW\""
+
+
+#--- Store the passwords for user reference
+{
+    echo "Server IP address : $PUBLIC_IP"
+    echo "Panel URL         : http://$PANEL_FQDN"
+    echo "zadmin Password   : $zadminpassword"
+    echo ""
+    echo "MySQL Root Password      : $mysqlpassword"
+    echo "MySQL Postfix Password   : $postfixpassword"
+    echo "MySQL ProFTPd Password   : $proftpdpassword"
+    echo "MySQL Roundcube Password : $roundcubepassword"
+} >> /root/passwords.txt
+
+#--- Advise the admin that Sentora is now installed and accessible.
+{
+echo "########################################################"
+echo " Congratulations has now been installed on your"
+echo " server. Please review the log file left in /root/ for "
+echo " any errors encountered during installation."
+echo ""
+echo " Login to Sentora at http://$PANEL_FQDN"
+echo " Sentora Username  : zadmin"
+echo " Sentora Password  : $zadminpassword"
+echo ""
+echo " MySQL Root Password      : $mysqlpassword"
+echo " MySQL Postfix Password   : $postfixpassword"
+echo " MySQL ProFTPd Password   : $proftpdpassword"
+echo " MySQL Roundcube Password : $roundcubepassword"
+echo "   (theses passwords are saved in /root/passwords.txt)"
+echo "########################################################"
+echo ""
+} &>/dev/tty
+
+# Wait until the user have read before restarts the server...
+if [[ "$INSTALL" != "auto" ]] ; then
+    while true; do
+        read -e -p "Restart your server now to complete the install (y/n)? " rsn
+        case $rsn in
+            [Yy]* ) break;;
+            [Nn]* ) exit;
+        esac
+    done
+    shutdown -r now
+fi
