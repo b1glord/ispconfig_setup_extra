@@ -1,6 +1,6 @@
 #https://nginx.org/en/linux_packages.html
 # Add nginx Repo
-wget -nc https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/nginx/nginx.repo -P /etc/yum.repos.d
+wget -N https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/centos7/nginx/nginx.repo -P /etc/yum.repos.d
 
 yum update
 sudo yum-config-manager --enable nginx-mainline
