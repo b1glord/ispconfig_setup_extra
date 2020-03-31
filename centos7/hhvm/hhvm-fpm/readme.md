@@ -2,7 +2,7 @@
 #### port:9001 dinleyecek sekilde duzenledim
 
 ```
-rpm -ivh https://github.com/b1glord/ispconfig_setup_extra/raw/master/centos7/hhvm-fpm/php70-php-fpm-7.0.33-18.el7.remi.x86_64.rpm --nodeps
+rpm -ivh https://github.com/b1glord/ispconfig_setup_extra/raw/master/centos7/hhvm/hhvm-fpm/php70-php-fpm-7.0.33-18.el7.remi.x86_64.rpm --nodeps
 ```
 #### Configure 
 ```
