@@ -1,7 +1,7 @@
 #https://nginx.org/en/linux_packages.html
 #
 # Backup Nginx Conf Files
-cp -R /etc/nginx /home/nginx
+cp -R /etc/nginx /home/backup/nginx
 
 # Remove Old nginx and modules
 systemctl stop nginx
