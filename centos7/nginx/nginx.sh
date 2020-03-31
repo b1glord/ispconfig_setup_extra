@@ -20,8 +20,8 @@ EOF
 
 yum update
 sudo yum-config-manager --enable nginx-mainline
-yum -y install --disablerepo=epel nginx
-yum -y install --disablerepo=epel nginx-all-modules nginx-mod-http-geoip nginx-mod-http-image-filter nginx-mod-http-perl nginx-mod-http-xslt-filter nginx-mod-mail nginx-mod-stream
+yum -y install nginx
+yum -y install nginx-all-modules nginx-mod-http-geoip nginx-mod-http-image-filter nginx-mod-http-perl nginx-mod-http-xslt-filter nginx-mod-mail nginx-mod-stream
 
 # Configure Nginx Default Port 81
 #sed -i "s/    listen       80;/    listen       81;/" /etc/nginx/conf.d/default.conf
