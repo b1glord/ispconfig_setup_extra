@@ -1,13 +1,16 @@
 #https://nginx.org/en/linux_packages.html
+#
+# Remove Old nginx and modules
+yum -y autoremove nginx
+# 1.16 modules
+yum -y install nginx-all-modules nginx-mod-http-geoip nginx-mod-http-image-filter nginx-mod-http-perl nginx-mod-http-xslt-filter nginx-mod-mail nginx-mod-stream
+
 # Add nginx Repo
 wget -N https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/centos7/nginx/nginx.repo -P /etc/yum.repos.d
 
 yum update
 sudo yum-config-manager --enable nginx-mainline
 yum -y install nginx
-
-# 1.16 add modules
-#yum -y install nginx-all-modules nginx-mod-http-geoip nginx-mod-http-image-filter nginx-mod-http-perl nginx-mod-http-xslt-filter nginx-mod-mail nginx-mod-stream
 
 # 1.17 add modules
 yum -y install nginx-module-geoip nginx-module-image-filter nginx-module-njs nginx-module-perl nginx-module-xslt
