@@ -1,18 +1,27 @@
 #https://nginx.org/en/linux_packages.html
 # Add nginx Repo
   cat > /etc/yum.repos.d/nginx.repo <<EOF
-[nginx]
-name=nginx repo
-baseurl=http://nginx.org/packages/centos/7/$basearch/
+[nginx-stable]
+name=nginx stable repo
+baseurl=http://nginx.org/packages/centos/7/basearch/
 gpgcheck=1
 enabled=1
 gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
+
+[nginx-mainline]
+name=nginx mainline repo
+baseurl=http://nginx.org/packages/mainline/centos/7/basearch/
+gpgcheck=1
+enabled=0
+gpgkey=https://nginx.org/keys/nginx_signing.key
+module_hotfixes=true
 EOF
 
-
 yum update
-yum install -y nginx
-yum install -y nginx-all-modules nginx-mod-http-geoip nginx-mod-http-image-filter nginx-mod-http-perl nginx-mod-http-xslt-filter nginx-mod-mail nginx-mod-stream
+sudo yum-config-manager --enable nginx-mainline
+yum -y install --disablerepo=epel nginx
+yum -y install --disablerepo=epel nginx-all-modules nginx-mod-http-geoip nginx-mod-http-image-filter nginx-mod-http-perl nginx-mod-http-xslt-filter nginx-mod-mail nginx-mod-stream
 
 # Configure Nginx Default Port 81
 #sed -i "s/    listen       80;/    listen       81;/" /etc/nginx/conf.d/default.conf
