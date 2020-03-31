@@ -1,6 +1,11 @@
 #https://nginx.org/en/linux_packages.html
 #
+# Backup Nginx Conf Files
+cp -R /etc/nginx /home/nginx
+
 # Remove Old nginx and modules
+systemctl stop nginx
+systemctl disable nginx
 yum -y autoremove nginx
 # 1.16 modules
 yum -y autoremove nginx-all-modules nginx-mod-http-geoip nginx-mod-http-image-filter nginx-mod-http-perl nginx-mod-http-xslt-filter nginx-mod-mail nginx-mod-stream
