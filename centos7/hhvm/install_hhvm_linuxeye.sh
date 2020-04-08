@@ -29,45 +29,65 @@ gpgcheck=0
 EOF
 
   echo -n "Installing HHVM HipHop Virtual Machine (FCGI)... "
-   yum -y install hhvm
-
-# Configure Hhvm (optional)
-#wget https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/centos7/hhvm/config.hdf -P /etc/hhvm/
-#wget https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/centos7/hhvm/static.mime-types.hdf -P /usr/share/hhvm/hdf/
- mkdir /var/run/hhvm
- mkdir /var/log/hhvm
-
- TIME_ZONE=$(echo "$TIME_ZONE" | sed -n 's/ (.*)$//p')
- sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
-
-
-
-
-
-
-
-# Open Log (optional) 
-sed -i "s%;pid = /var/log/hhvm/pid%pid = /var/log/hhvm/pid%" /etc/hhvm/server.ini
+  yum -y install hhvm
 
 # Add System Startup
- echo "[Unit]" >> /etc/systemd/system/hhvm.service
- echo "Description=HHVM HipHop Virtual Machine (FCGI)" >> /etc/systemd/system/hhvm.service
- echo "After=network.target nginx.service mariadb.service" >> /etc/systemd/system/hhvm.service
- echo "" >> /etc/systemd/system/hhvm.service
- echo "[Service]" >> /etc/systemd/system/hhvm.service
+  systemctl enable hhvm
+  chmod +x /etc/rc.local
+  cat > /etc/rc.local << EOF
+#!/bin/bash
+# THIS FILE IS ADDED FOR COMPATIBILITY PURPOSES
+#
+# It is highly advisable to create own systemd services or udev rules
+# to run scripts during boot instead of using this file.
+#
+# In contrast to previous versions due to parallel execution during boot
+# this script will NOT be run after all other services.
+#
+# Please note that you must run 'chmod +x /etc/rc.d/rc.local' to ensure
+# that this script will be executed during boot.
 
-echo "ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001" >> /etc/systemd/system/hhvm.service
+touch /var/lock/subsys/local
+mkdir -p /var/run/hhvm/
+chown -R nginx:nginx /var/run/hhvm/
+semanage fcontext -a -t httpd_var_run_t "/var/run/hhvm(/.*)?"
+restorecon -Rv /var/run/hhvm
+EOF
 
-echo "" >> /etc/systemd/system/hhvm.service
- echo "[Install]" >> /etc/systemd/system/hhvm.service
- echo "WantedBy=multi-user.target" >> /etc/systemd/system/hhvm.service
+# Configure Hhvm 
+sed -i "s%;pid = /var/log/hhvm/pid%pid = /var/run/hhvm/hhvm.pid%" /etc/hhvm/server.ini
+sed -i "s%hhvm.pid_file = "/var/log/hhvm/pid"%hhvm.pid_file = "/var/log/hhvm/hhvm.pid"%" /etc/hhvm/server.ini
+sed -i "s/hhvm.server.port = 9001/;hhvm.server.port = 9001/" /etc/hhvm/server.ini
+sed -i "/;hhvm.server.port = 9001/a hhvm.server.file_socket=/var/run/hhvm/hhvm.sock" /etc/hhvm/server.ini
+sed -i "s%hhvm.repo.central.path = /var/run/hhvm/hhvm.hhbc%hhvm.repo.central.path = /var/cache/hhvm/hhvm.hhbc%" /etc/hhvm/server.ini
+sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
+sed -i "s%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --config /etc/hhvm/php.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.FileSocket=/var/run/hhvm/hhvm.sock -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log%" /usr/lib/systemd/system/hhvm.service
 
-# Configure Log files hhvm.service (optional)
-sed -i "s%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001 -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log%" /etc/systemd/system/hhvm.service
-
+if [ "$CFG_WEBSERVER" == "apache" ]; then
+	CFG_NGINX=n
+	CFG_APACHE=y
+mkdir /var/log/hhvm /var/cache/hhvm /var/run/hhvm
+sudo chown apache:apache /var/log/hhvm /var/cache/hhvm /var/run/hhvm
+chmod 0770 /var/log/hhvm /var/cache/hhvm /var/run/hhvm
+sed -i "s%chown -R nginx:nginx /var/run/hhvm/%chown -R apache:apache /var/run/hhvm/%" /etc/rc.local
+wget -nc https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/centos7/hhvm/files/apache2/mods-available/hhvm_proxy_fcgi.conf -P /etc/httpd/conf.d/
+sed -i "s/--user nginx/--user apache/" /usr/lib/systemd/system/hhvm.service
+elif [ "$CFG_WEBSERVER" == "nginx" ]; then
+  	CFG_NGINX=y
+	CFG_APACHE=n
+usermod -a -G apache nginx
+mkdir /var/log/hhvm /var/cache/hhvm /var/run/hhvm
+sudo chown nginx:nginx /var/log/hhvm /var/cache/hhvm /var/run/hhvm
+chmod 0770 /var/log/hhvm /var/cache/hhvm /var/run/hhvm
+sed -i "s/--user nginx/--user nginx/" /usr/lib/systemd/system/hhvm.service
+fi
 systemctl daemon-reload
-systemctl restart hhvm
-systemctl status hhvm
+wget -nc https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/centos7/hhvm/test/hhvminfo.php -P /var/www
+wget -nc https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/centos7/hhvm/test/phpinfo.php -P /var/www
 
- hhvm --version
+systemctl start hhvm
+systemctl status hhvm
+hhvm --version
  echo -e "[${green}DONE${NC}]\n"
+ fi
+}
