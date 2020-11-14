@@ -52,7 +52,7 @@ server {
 
                # PHP only, required if PHP was built with --enable-force-cgi-redirect
                fastcgi_param   REDIRECT_STATUS         200;
-               fastcgi_pass unix:/var/lib/php5-fpm/apps.sock;
+               fastcgi_pass unix:/var/lib/php-fpm/apps.sock;
                fastcgi_index index.php;
                fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                #fastcgi_param PATH_INFO $fastcgi_script_name;
@@ -99,7 +99,7 @@ server {
                        fastcgi_param   REDIRECT_STATUS         200;
                        # To access phpMyAdmin, the default user (like www-data on Debian/Ubuntu) must be used
                        fastcgi_pass 127.0.0.1:9000;
-                       #fastcgi_pass unix:/var/lib/php5-fpm/apps.sock;
+                       #fastcgi_pass unix:/var/lib/php-fpm/apps.sock;
                        fastcgi_index index.php;
                        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                        fastcgi_buffer_size 128k;
@@ -149,7 +149,7 @@ server {
                        fastcgi_param   REDIRECT_STATUS         200;
                        # To access SquirrelMail, the default user (like www-data on Debian/Ubuntu) must be used
                        fastcgi_pass 127.0.0.1:9000;
-                       #fastcgi_pass unix:/var/lib/php5-fpm/apps.sock;
+                       #fastcgi_pass unix:/var/lib/php-fpm/apps.sock;
                        fastcgi_index index.php;
                        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
                        fastcgi_buffer_size 128k;
