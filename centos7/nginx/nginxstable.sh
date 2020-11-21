@@ -21,7 +21,7 @@ module_hotfixes=true
 EOF
 
 yum update
-sudo yum-config-manager --enable nginx-mainline
+sudo yum-config-manager --enable nginx-stable
 yum -y install nginx
 
 
