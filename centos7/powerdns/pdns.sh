@@ -1,13 +1,13 @@
 yum -y install powerdns
 
-```
+
 create database powerdns;
 create user 'powerdns'@'localhost' IDENTIFIED BY 'MYSQL_PAROLASI';
 grant all privileges on powerdns.* to powerdns@localhost;
 SELECT User, Host, Password FROM mysql.user;
-```
 
-```
+
+
 use powerdns;
 
 CREATE TABLE domains (
@@ -44,5 +44,5 @@ ip VARCHAR(25) NOT NULL,
 nameserver VARCHAR(255) NOT NULL,
 account VARCHAR(40) DEFAULT NULL
 );
-```
+
 exit
