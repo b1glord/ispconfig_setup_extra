@@ -13,3 +13,5 @@ echo -n "Installing Ioncube Loader (PHP 7)... "
   sed -i '/;;ioncube;;/a zend_extension=/usr/local/ioncube/ioncube_loader_lin_7.3.so' /etc/php.ini
   service php-fpm restart
 echo -e "[${green}DONE${NC}]\n"
+
+php -r phpinfo();
