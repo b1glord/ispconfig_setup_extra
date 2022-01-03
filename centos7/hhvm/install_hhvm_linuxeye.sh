@@ -89,5 +89,4 @@ systemctl start hhvm
 systemctl status hhvm
 hhvm --version
  echo -e "[${green}DONE${NC}]\n"
- fi
 }
