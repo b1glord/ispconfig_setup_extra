@@ -16,6 +16,6 @@
   echo -n "Removing Git (Old Version)... "
   yum -y remove git
   echo -n "Installing Git (New Version)... "
-  yum -y install https://centos7.iuscommunity.org/ius-release.rpm
-  yum -y install git2u
+  yum -y install https://repo.ius.io/ius-release-el7.rpm
+  yum -y install git222
   git --version
