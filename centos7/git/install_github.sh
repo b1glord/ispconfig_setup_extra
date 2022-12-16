@@ -13,9 +13,10 @@
 #
 #---------------------------------------------------------------------
  #ref https://www.howtodojo.com/2017/10/install-git-centos-7/
+  #ref https://ius.io/
   echo -n "Removing Git (Old Version)... "
   yum -y remove git
   echo -n "Installing Git (New Version)... "
   yum -y install https://repo.ius.io/ius-release-el7.rpm
-  yum -y install git222
+  yum -y install git236
   git --version
