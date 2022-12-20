@@ -13,6 +13,3 @@ wget -nc https://raw.githubusercontent.com/b1glord/ispconfig_setup_extra/master/
 chmod a+x ./install_hhvm_facebook.sh
 ./install_hhvm_facebook.sh
 ```
-
-## See Hhvm Php Fpm modded service files
-https://github.com/b1glord/ispconfig_setup_extra/tree/master/centos7/hhvm/hhvm-fpm
