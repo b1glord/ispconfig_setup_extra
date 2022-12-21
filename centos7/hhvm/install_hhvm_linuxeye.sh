@@ -19,49 +19,39 @@
 #https://www.howtoforge.com/tutorial/how-to-install-wordpress-with-hhvm-and-nginx-on-centos-7/#step-configure-hhvm-and-nginx
 #http://mirrors.linuxeye.com/hhvm-repo/7/x86_64/
 
-#Add Repository Hvvm PreBuild Installation
-  cat > /etc/yum.repos.d/hhvm.repo << EOF
-[hhvm]
-name=gleez hhvm-repo
-baseurl=http://mirrors.linuxeye.com/hhvm-repo/7/\$basearch/
-enabled=1
-gpgcheck=0
+yum-config-manager --save --setopt=hhvm.skip_if_unavailable=true
+yum -y install cpp gcc-c++ cmake git psmisc {binutils,boost,jemalloc,numactl}-devel \
+{ImageMagick,sqlite,tbb,bzip2,openldap,readline,elfutils-libelf,gmp,lz4,pcre}-devel \
+lib{xslt,event,yaml,vpx,png,zip,icu,mcrypt,memcached,cap,dwarf}-devel \
+{unixODBC,expat,mariadb}-devel lib{edit,curl,xml2,xslt}-devel \
+glog-devel oniguruma-devel ocaml gperf enca libjpeg-turbo-devel openssl-devel \
+make libc-client
+
+rpm -Uvh https://github.com/b1glord/ispconfig_setup_extra/raw/master/centos7/hhvm/repo/hhvm-3.15.3-1.el7.centos.x86_64.rpm
+rpm -Uvh https://github.com/b1glord/ispconfig_setup_extra/raw/master/centos7/hhvm/repo/hhvm-devel-3.15.3-1.el7.centos.x86_64.rpm
+
+  cat > /etc/systemd/system/hhvm.service << EOF
+[Unit]
+Description=HHVM HipHop Virtual Machine (FCGI)
+After=network.target nginx.service mariadb.service
+ 
+[Service]
+ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --mode daemon -vServer.Type=fastcgi -vServer.FileSocket=/var/log/hhvm/hhvm.sock
+Restart=always
+# Restart service after 10 seconds if the hhvm service crashes:
+RestartSec=10
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
 EOF
-
-  echo -n "Installing HHVM HipHop Virtual Machine (FCGI)... "
-  yum -y install hhvm
-
-# Add System Startup
-  systemctl enable hhvm
-  chmod +x /etc/rc.local
-  cat > /etc/rc.local << EOF
-#!/bin/bash
-# THIS FILE IS ADDED FOR COMPATIBILITY PURPOSES
-#
-# It is highly advisable to create own systemd services or udev rules
-# to run scripts during boot instead of using this file.
-#
-# In contrast to previous versions due to parallel execution during boot
-# this script will NOT be run after all other services.
-#
-# Please note that you must run 'chmod +x /etc/rc.d/rc.local' to ensure
-# that this script will be executed during boot.
-
-touch /var/lock/subsys/local
-mkdir -p /var/run/hhvm/
-chown -R nginx:nginx /var/run/hhvm/
-semanage fcontext -a -t httpd_var_run_t "/var/run/hhvm(/.*)?"
-restorecon -Rv /var/run/hhvm
-EOF
-
 # Configure Hhvm 
-sed -i "s%;pid = /var/log/hhvm/pid%pid = /var/run/hhvm/hhvm.pid%" /etc/hhvm/server.ini
-sed -i "s%hhvm.pid_file = "/var/log/hhvm/pid"%hhvm.pid_file = "/var/log/hhvm/hhvm.pid"%" /etc/hhvm/server.ini
 sed -i "s/hhvm.server.port = 9001/;hhvm.server.port = 9001/" /etc/hhvm/server.ini
-sed -i "/;hhvm.server.port = 9001/a hhvm.server.file_socket=/var/run/hhvm/hhvm.sock" /etc/hhvm/server.ini
-sed -i "s%hhvm.repo.central.path = /var/run/hhvm/hhvm.hhbc%hhvm.repo.central.path = /var/cache/hhvm/hhvm.hhbc%" /etc/hhvm/server.ini
+sed -i "/;hhvm.server.port = 9001/a hhvm.server.file_socket=/var/log/hhvm/hhvm.sock" /etc/hhvm/server.ini
 sed -i "s%date.timezone = Asia/Calcutta%date.timezone = $TIME_ZONE%" /etc/hhvm/server.ini
-sed -i "s%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.Port=9001%ExecStart=/usr/local/bin/hhvm --config /etc/hhvm/server.ini --config /etc/hhvm/php.ini --user nginx --mode daemon -vServer.Type=fastcgi -vServer.FileSocket=/var/run/hhvm/hhvm.sock -vLog.Level=Debug -vLog.File=/var/log/hhvm/hhvm.log%" /usr/lib/systemd/system/hhvm.service
+mkdir /var/log/hhvm
+# Start Hhvm Service
+systemctl start hhvm
 
 if [ "$CFG_WEBSERVER" == "apache" ]; then
 	CFG_NGINX=n
